@@ -3,6 +3,8 @@ import { Formik, Form, Field } from "formik";
 import * as Yup from "yup";
 import { ErrorMessage } from "formik";
 import { useId } from "react";
+import { addContact } from '../../redux/contactsSlice.js';
+import { useDispatch } from 'react-redux';
 
 export default function ContactForm({ HendleSubmit }) {
   const FormSchema = Yup.object().shape({
@@ -16,13 +18,22 @@ export default function ContactForm({ HendleSubmit }) {
       .required("Required"),
   });
 
+  const dispatch = useDispatch();
+
+  const onSubmit = (values, { resetForm }) => {
+    dispatch(addContact(values));
+    resetForm();
+  };
+
+
+
   const nameFieldId = useId();
   const numberFieldId = useId();
   return (
     <>
       <Formik
         initialValues={{ id: "", name: "", number: "" }}
-        onSubmit={HendleSubmit}
+        onSubmit={onSubmit}
         validationSchema={FormSchema}
       >
         <Form className={css.container}>
